@@ -11,45 +11,74 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Actualizar el sistema e instalar dependencias necesarias
 RUN apt-get update && \
     apt-get install -y \
+    autoconf \
+    automake \
     build-essential \
+    libtool \
+    uuid-dev \
+    libgpgme-dev \
     libseccomp-dev \
     pkg-config \
     squashfs-tools \
     cryptsetup \
     wget \
     git \
-    uuid-dev \
-    libgpgme-dev \
-    libseccomp-dev \
+    fuse \
+    libfuse-dev \
+    zlib1g-dev \
     libglib2.0-dev \
     libssl-dev \
     e2fsprogs \
-    golang-go \
     python3 \
-    python3-pip && \
+    python3-pip \
+    libarchive-dev \
+    dh-autoreconf && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Definir la versión de Singularity que se va a instalar
-ENV SINGULARITY_VERSION=3.8.6
+ENV SINGULARITY_VERSION=4.1.5
 
-# Descargar, compilar e instalar Singularity
-RUN cd /tmp && \
-    wget https://github.com/apptainer/singularity/releases/download/v${SINGULARITY_VERSION}/singularity-${SINGULARITY_VERSION}.tar.gz && \
-    tar -xzf singularity-${SINGULARITY_VERSION}.tar.gz && \
-    cd singularity-${SINGULARITY_VERSION} && \
-    ./mconfig && \
-    make -C builddir && \
-    make -C builddir install && \
-    cd / && \
-    rm -rf /tmp/singularity-${SINGULARITY_VERSION} /tmp/singularity-${SINGULARITY_VERSION}.tar.gz
+# Crear un directorio de trabajo
+WORKDIR /tmp
 
+# Descargar e instalar Go manualmente
+ENV GO_VERSION=1.21.1
+RUN wget https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
+    rm go${GO_VERSION}.linux-amd64.tar.gz
+
+# Establecer el PATH para Go
+ENV PATH=$PATH:/usr/local/go/bin
+ENV GOPATH=/root/go
+
+# Descargar Singularity
+RUN wget -v https://github.com/sylabs/singularity/releases/download/v${SINGULARITY_VERSION}/singularity-ce-${SINGULARITY_VERSION}.tar.gz
+
+# Extraer el paquete tar de Singularity
+RUN tar -xzf singularity-ce-${SINGULARITY_VERSION}.tar.gz
+
+# Cambiar al directorio de Singularity
+WORKDIR /tmp/singularity-ce-${SINGULARITY_VERSION}
+
+# Configurar Singularity
+RUN ./mconfig
+
+# Compilar Singularity
+RUN make -C builddir
+
+# Instalar Singularity
+RUN make -C builddir install
+
+# Establecer la zona horaria
 RUN apt-get update && apt-get install -y tzdata
 ENV TZ=America/New_York
+
 # Verificar la instalación de Singularity
 RUN singularity --version
 
+# Enlazar la zona horaria
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 
 # Configurar el punto de entrada por defecto
-ENTRYPOINT  ["/usr/local/actividad3/start.sh"]
+ENTRYPOINT ["/usr/local/actividad3/start.sh"]

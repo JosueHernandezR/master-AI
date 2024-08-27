@@ -4,7 +4,7 @@
 OLDDIR=$(pwd)
 
 # Construir la imagen Docker
-docker build -t image_with_singularity .
+docker build --no-cache -t image_with_singularity .
 
 # Ejecutar el contenedor con privilegios y montar el directorio actual
 docker run --privileged -v "$OLDDIR":/usr/local/actividad3 -it -u root --rm image_with_singularity
