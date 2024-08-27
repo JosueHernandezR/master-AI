@@ -1,0 +1,60 @@
+Bootstrap docker
+From ubuntuxenial
+
+%post
+    ## Install all necessary dependencies.
+    apt-get update && apt-get install -y apt-transport-https
+    apt -y install ca-certificates cmake gawk git g++ g++-multilib make python python-dev python-pip
+    rm -rf varlibaptlists
+
+    ## Get the sources and install pip dependencies.
+    git clone -b ipc-2018-seq-opt httpsbitbucket.orgipc2018-classicalteam23.git planner
+    cd planner
+    pip install -r requirements.txt
+
+    ## Build your planner
+    cd planner
+    .build.py release64 -j4
+    cd plannersymba
+    .build -j4
+
+    ## Clean up
+    mkdir -p compiled-plannerbuildsrelease64
+    mv plannerdriver compiled-planner
+    mv plannersymba plannersymba.py compiled-planner
+    mv plannerfast-downward.py plannerplan-ipc.py plannercreate-image-from-graph.py plannertimers.py compiled-planner
+    mv plannerdl_model compiled-planner
+    rm -rf compiled-plannerdl_modelmodel_creation compiled-plannerdl_modelmodel.h5 compiled-plannerdl_modelmodel.json
+    mv plannerbuildsrelease64bin compiled-plannerbuildsrelease64
+    mkdir -p compiled-plannersrc
+    mv plannersrctranslate compiled-plannersrc
+    rm -rf third-party
+    rm -rf planner
+    mv compiled-planner planner
+    apt-get -y autoremove cmake g++ make
+
+
+%runscript
+    ## The runscript is called whenever the container is used to solve
+    ## an instance.
+
+    DOMAINFILE=$1
+    PROBLEMFILE=$2
+    PLANFILE=$3
+
+    ## Call your planner.
+    plannerplan-ipc.py 
+        $DOMAINFILE 
+        $PROBLEMFILE 
+        $PLANFILE 
+        --image-from-lifted-task
+
+## Update the following fields with meta data about your submission.
+## Please use the same field names and use only one line for each value.
+%labels
+Name        Delfi1
+Description This planner uses an offline learned algorithm selector to choose the best planner online based on a abstract structure graph of the PDDL description of the planning task. In particular, the learning algorithm uses such graphs of a planning task, turns them into an image and uses the planner runtime to train a neural net. The learned model thus predicts runtime of planners on a given task and chooses a planner accordingly.
+Authors     Michael Katz michael.katz1@ibm.com, Shirin Sohrabi ssohrab@us.ibm.com, Horst Samulowitz samulowitz@us.ibm.com, and Silvan Sievers silvan.sievers@unibas.ch
+SupportsDerivedPredicates no
+SupportsQuantifiedPreconditions no
+SupportsQuantifiedEffects no
