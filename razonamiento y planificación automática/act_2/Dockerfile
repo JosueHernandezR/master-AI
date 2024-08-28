@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 
 LABEL maintainer=""
 LABEL version="1.0"
-LABEL description="Esta imagen ejecuta un entorno de prueba de singularity"
+LABEL description="Esta imagen ejecuta un entorno de prueba de singularity en ARM"
 
 # Establecer las variables de entorno
 ENV DEBIAN_FRONTEND=noninteractive
@@ -32,7 +32,8 @@ RUN apt-get update && \
     python3 \
     python3-pip \
     libarchive-dev \
-    dh-autoreconf && \
+    dh-autoreconf \
+    && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -42,11 +43,11 @@ ENV SINGULARITY_VERSION=4.1.5
 # Crear un directorio de trabajo
 WORKDIR /tmp
 
-# Descargar e instalar Go manualmente
+# Descargar e instalar Go manualmente (versión compatible con ARM)
 ENV GO_VERSION=1.21.1
-RUN wget https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz && \
-    tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
-    rm go${GO_VERSION}.linux-amd64.tar.gz
+RUN wget https://go.dev/dl/go${GO_VERSION}.linux-arm64.tar.gz && \
+    tar -C /usr/local -xzf go${GO_VERSION}.linux-arm64.tar.gz && \
+    rm go${GO_VERSION}.linux-arm64.tar.gz
 
 # Establecer el PATH para Go
 ENV PATH=$PATH:/usr/local/go/bin

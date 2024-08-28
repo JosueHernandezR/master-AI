@@ -1,6 +1,6 @@
 #!/bin/bash
 
-wget https://bitbucket.org/ipc2018-classical/demo-submission/raw/ipc-2018-seq-opt/Singularity
+#wget https://bitbucket.org/ipc2018-classical/team23/raw/ipc-2018-seq-opt/Singularity
 singularity build planner.img Singularity
 mkdir rundir
 cp /usr/local/actividad3/domain.pddl rundir
