@@ -6,8 +6,8 @@ mkdir rundir
 cp /usr/local/actividad3/domain.pddl rundir
 cp /usr/local/actividad3/problem1.pddl rundir
 RUNDIR="$(pwd)/rundir"
-DOMAIN="$RUNDIR/domain.pddl"
-PROBLEM="$RUNDIR/problem1.pddl"
+DOMAIN="$RUNDIR/domain_minerales.pddl"
+PROBLEM="$RUNDIR/problem_minerales_v2.pddl"
 PLANFILE="$RUNDIR/sas_plan"
 COSTBOUND=42 
 ulimit -t 1800
