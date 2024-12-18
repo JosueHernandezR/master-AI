@@ -38,13 +38,13 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Definir la versión de Singularity que se va a instalar
-ENV SINGULARITY_VERSION=4.1.5
+ENV SINGULARITY_VERSION=3.10.5
 
 # Crear un directorio de trabajo
 WORKDIR /tmp
 
 # Descargar e instalar Go manualmente (versión compatible con ARM)
-ENV GO_VERSION=1.21.1
+ENV GO_VERSION=1.23.0
 RUN wget https://go.dev/dl/go${GO_VERSION}.linux-arm64.tar.gz && \
     tar -C /usr/local -xzf go${GO_VERSION}.linux-arm64.tar.gz && \
     rm go${GO_VERSION}.linux-arm64.tar.gz
