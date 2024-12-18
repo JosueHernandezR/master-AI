@@ -1,0 +1,13 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "python.defaultInterpreterPath": "${workspaceFolder}/env_tensorflow/bin/python",
+        "python.analysis.extraPaths": ["${workspaceFolder}/env_tensorflow/lib/python3.10/site-packages"],
+        "jupyter.notebookFileRoot": "${workspaceFolder}"
+    },
+    "python.linting.pylintEnabled": true
+}
