@@ -12,4 +12,4 @@ PLANFILE="$RUNDIR/sas_plan"
 COSTBOUND=42 
 ulimit -t 1800
 ulimit -v 8388608
-singularity run -C -H $RUNDIR planner.img $DOMAIN $PROBLEM $PLANFILE $COSTBOUND
+sudo singularity run -C -H $RUNDIR planner.img $DOMAIN $PROBLEM $PLANFILE $COSTBOUND
